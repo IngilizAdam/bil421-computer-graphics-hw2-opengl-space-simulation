@@ -8,7 +8,7 @@ Spaceship::Spaceship(vec3 position, float radius, vec4 color, int resolution, GL
 	this->resolution = resolution;
 	this->program = program;
 
-	Mesh mesh = drawSphere(radius, resolution, color, position);
+	Mesh mesh = drawSphere(radius, resolution, color);
 	mesh.setPosition(this->position);
 
 	setupBuffers();
