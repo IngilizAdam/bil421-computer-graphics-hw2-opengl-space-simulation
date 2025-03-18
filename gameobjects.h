@@ -32,6 +32,7 @@ public:
 
 	void setupBuffers();
 	void updateBuffers();
+	virtual void updateExtra();
 
 	unsigned int getVerticePositionsSize() { return sizeof(vec4) * mesh.globalVerticePositions.size(); }
 	unsigned int getVerticeColorsSize() { return sizeof(vec4) * mesh.verticeColors.size(); }
@@ -39,4 +40,5 @@ public:
 	unsigned int getTrianglesCount() { return mesh.triangles.size(); }
 
 	static Mesh drawSphere(float radius, int resolution, vec4 color, vec3 position);
+	static Mesh drawTorus(float innerRadius, float outerRadius, int resolution, vec4 color, vec3 position);
 };

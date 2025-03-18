@@ -27,9 +27,15 @@ void GameObject::setupBuffers() {
 }
 
 void GameObject::updateBuffers() {
+	updateExtra();
+
     glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glDrawElements(GL_TRIANGLES, mesh.triangles.size(), GL_UNSIGNED_INT, mesh.triangles.data());
+}
+
+void GameObject::updateExtra() {
+	// for derived classes to implement
 }
 
 Mesh GameObject::drawSphere(float radius, int resolution, vec4 color, vec3 position) {
@@ -57,6 +63,41 @@ Mesh GameObject::drawSphere(float radius, int resolution, vec4 color, vec3 posit
 			mesh.globalVerticePositions.push_back(globalVertice);
 
 			// place vertice color
+			mesh.verticeColors.push_back(color);
+		}
+	}
+
+	// generate triangle formation
+	for (int i = 0; i < resolution - 1; i++) {
+		for (int j = 0; j < resolution - 1; j++) {
+			mesh.triangles.push_back(i * resolution + j);
+			mesh.triangles.push_back(i * resolution + j + 1);
+			mesh.triangles.push_back((i + 1) * resolution + j);
+			mesh.triangles.push_back(i * resolution + j + 1);
+			mesh.triangles.push_back((i + 1) * resolution + j + 1);
+			mesh.triangles.push_back((i + 1) * resolution + j);
+		}
+	}
+
+	return mesh;
+}
+
+Mesh GameObject::drawTorus(float innerRadius, float outerRadius, int resolution, vec4 color, vec3 position) {
+	Mesh mesh;
+
+	vec4 midpoint = vec4((outerRadius - innerRadius) / 2, 0, 0, 1);
+	for (int i = 0; i < resolution; i++) {
+		float alpha = (1.0f * i / (resolution-1));
+		for (int j = 0; j < resolution; j++) {
+			float beta = (1.0f * j / resolution);
+			mat4 rotationMatrix = RotateY(360.0f * beta);
+			vec4 vertice = rotationMatrix * midpoint;
+			mat4 translationMatrix = Translate(innerRadius, 0, 0);
+			vertice = translationMatrix * vertice;
+			rotationMatrix = RotateZ(360.0f * alpha);
+			vertice = rotationMatrix * vertice;
+			mesh.localVerticePositions.push_back(vertice);
+			mesh.globalVerticePositions.push_back(Translate(position) * vertice);
 			mesh.verticeColors.push_back(color);
 		}
 	}
