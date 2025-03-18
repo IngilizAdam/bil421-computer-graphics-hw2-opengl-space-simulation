@@ -26,12 +26,10 @@ GLuint model;  // model-view matrix uniform shader variable location
 
 GLfloat  fovy = 120.0;  // Field-of-view in Y direction angle (in degrees)
 GLfloat  aspect;       // Viewport aspect ratio
-GLfloat  zNear = 0.1, zFar = 100.0;
+GLfloat  zNear = 0.1, zFar = 1000.0;
 GLuint  project; // projection matrix uniform shader variable location
-GLdouble viewer[3] = { 1.5, 0.0, 0.0 };
+GLdouble viewer[3] = { 10, 170, 15 };
 //----------------------------------------------------------------------------
-
-std::vector<Planet*> planets;
 
 std::vector<GameObject*> gameObjects;
 
@@ -44,12 +42,19 @@ void init()
     model = glGetUniformLocation(program, "model_view");
     project = glGetUniformLocation(program, "projection");
 
-    gameObjects.push_back(new Planet(vec3(0.0, 1.0, 0.0), 0.5, vec4(1.0, 0.0, 0.0, 1.0), 40, program));
-    gameObjects.push_back(new Planet(vec3(0.0, -1.0, 0.0), 0.5, vec4(0.0, 0.0, 1.0, 1.0), 40, program));
-    gameObjects.push_back(new Planet(vec3(0.0, -1.0, 1.0), 0.5, vec4(1.0, 0.0, 1.0, 1.0), 40, program));
+    int planetResolution = 40;
+    float planetRadius = 1.0f;
+    gameObjects.push_back(new Planet(vec3(30, 170, 15), planetRadius, vec4(1.00, 0.00, 0.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(80, 110, 25), planetRadius, vec4(0.00, 1.00, 0.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(70, 60, 12), planetRadius, vec4(0.00, 0.00, 1.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(90, 150, 13), 0.5, vec4(1.00, 1.00, 0.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(120, 80, 17), 0.5, vec4(1.00, 0.00, 1.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(150, 40, 15), 0.5, vec4(0.00, 1.00, 1.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(160, 170, 22), 0.5, vec4(1.00, 1.00, 1.00, 1.0), planetResolution, program));
+
 
     glEnable(GL_DEPTH_TEST);
-    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
 }
 
 //----------------------------------------------------------------------------
@@ -64,7 +69,7 @@ display(void)
             radius*cos(theta),
         1.0 );*/
     point4  eye(viewer[0], viewer[1], viewer[2], 1.0);
-    point4  at(0.0, 0.0, 0.0, 1.0);
+    point4  at(30, 170, 15, 1.0);
     vec4    up(0.0, 0.0, 1.0, 0.0);
     printv(eye);
     mat4  mv = LookAt(eye, at, up);

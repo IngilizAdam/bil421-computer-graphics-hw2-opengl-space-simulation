@@ -6,6 +6,8 @@
 
 // initialize the class for planet objects
 class Planet : public GameObject {
+
+protected:
 	float radius;
 	int resolution;
 
@@ -16,4 +18,5 @@ public:
 	// getters
 	float getRadius() { return radius; }
 	int getResolution() { return resolution; }
+
 };
