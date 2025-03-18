@@ -1,44 +1,65 @@
 #include "gameobjects.h"
 
 void GameObject::setupBuffers() {
-    // Create a vertex array object
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    // Create a vertex array object for each mesh
+	for (int i = 0; i < meshs.size(); i++) {
+		Mesh mesh = meshs[i];
+		GLuint vao;
+		GLuint buffer;
+		GLuint program = this->program;
+		
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
     
-    glGenBuffers(1, &buffer);
+		glGenBuffers(1, &buffer);
 
-    // Create and initialize a buffer object
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, getVerticePositionsSize() + getVerticeColorsSize(),
-        NULL, GL_STATIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, getVerticePositionsSize(), mesh.globalVerticePositions.data());
-    glBufferSubData(GL_ARRAY_BUFFER, getVerticePositionsSize(), getVerticeColorsSize(), mesh.verticeColors.data());
+		// Create and initialize a buffer object
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		glBufferData(GL_ARRAY_BUFFER, mesh.getVerticePositionsSize() + mesh.getVerticeColorsSize(),
+			NULL, GL_STATIC_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, mesh.getVerticePositionsSize(), mesh.getLocalVerticePositions());
+		glBufferSubData(GL_ARRAY_BUFFER, mesh.getVerticePositionsSize(), mesh.getVerticeColorsSize(), mesh.getVerticeColors());
 
-    // set up vertex arrays
-    GLuint vPosition = glGetAttribLocation(program, "vPosition");
-    glEnableVertexAttribArray(vPosition);
-    glVertexAttribPointer(vPosition, 4, GL_FLOAT, GL_FALSE, 0,
-        BUFFER_OFFSET(0));
+		// set up vertex arrays
+		GLuint vPosition = glGetAttribLocation(program, "vPosition");
+		glEnableVertexAttribArray(vPosition);
+		glVertexAttribPointer(vPosition, 4, GL_FLOAT, GL_FALSE, 0,
+			BUFFER_OFFSET(0));
 
-    GLuint vColor = glGetAttribLocation(program, "vColor");
-    glEnableVertexAttribArray(vColor);
-    glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, 0,
-        BUFFER_OFFSET(getVerticePositionsSize()));
+		GLuint vColor = glGetAttribLocation(program, "vColor");
+		glEnableVertexAttribArray(vColor);
+		glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, 0,
+			BUFFER_OFFSET(mesh.getVerticePositionsSize()));
+
+		this->vao.push_back(vao);
+		this->buffer.push_back(buffer);
+	}
 }
 
 void GameObject::updateBuffers() {
 	updateExtra();
 
-    glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glDrawElements(GL_TRIANGLES, mesh.triangles.size(), GL_UNSIGNED_INT, mesh.triangles.data());
+	for (int i = 0; i < meshs.size(); i++) {
+		Mesh mesh = meshs[i];
+		GLuint vao = this->vao[i];
+		GLuint buffer = this->buffer[i];
+
+		glBindVertexArray(vao);
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+		// send model matrix to shader
+		GLuint model = glGetUniformLocation(program, "model");
+		glUniformMatrix4fv(model, 1, GL_TRUE, mesh.getModelMatrix());
+
+		glDrawElements(GL_TRIANGLES, mesh.getTrianglesCount(), GL_UNSIGNED_INT, mesh.getTriangles());
+	}
 }
 
 void GameObject::updateExtra() {
 	// for derived classes to implement
 }
 
-Mesh GameObject::drawSphere(float radius, int resolution, vec4 color, vec3 position) {
+Mesh GameObject::drawSphere(float radius, int resolution, vec4 color) {
 	Mesh mesh;
 
 	// generate uv sphere vertice positions and colors
@@ -55,34 +76,29 @@ Mesh GameObject::drawSphere(float radius, int resolution, vec4 color, vec3 posit
 			vec4 localVertice = vertice;
 			rotationMatrix = RotateZ(360.0f * beta);
 			localVertice = rotationMatrix * localVertice;
-			mesh.localVerticePositions.push_back(localVertice);
 
-			// move vertice to its global position
-			mat4 translationMatrix = Translate(position.x, position.y, position.z);
-			vec4 globalVertice = translationMatrix * localVertice;
-			mesh.globalVerticePositions.push_back(globalVertice);
-
-			// place vertice color
-			mesh.verticeColors.push_back(color);
+			mesh.addVertice(localVertice, color);
 		}
 	}
 
 	// generate triangle formation
+	std::vector<int> triangles;
 	for (int i = 0; i < resolution - 1; i++) {
 		for (int j = 0; j < resolution - 1; j++) {
-			mesh.triangles.push_back(i * resolution + j);
-			mesh.triangles.push_back(i * resolution + j + 1);
-			mesh.triangles.push_back((i + 1) * resolution + j);
-			mesh.triangles.push_back(i * resolution + j + 1);
-			mesh.triangles.push_back((i + 1) * resolution + j + 1);
-			mesh.triangles.push_back((i + 1) * resolution + j);
+			triangles.push_back(i * resolution + j);
+			triangles.push_back(i * resolution + j + 1);
+			triangles.push_back((i + 1) * resolution + j);
+			triangles.push_back(i * resolution + j + 1);
+			triangles.push_back((i + 1) * resolution + j + 1);
+			triangles.push_back((i + 1) * resolution + j);
 		}
 	}
+	mesh.setTriangleArray(triangles);
 
 	return mesh;
 }
 
-Mesh GameObject::drawTorus(float innerRadius, float outerRadius, int resolution, vec4 color, vec3 position) {
+Mesh GameObject::drawTorus(float innerRadius, float outerRadius, int resolution, vec4 color) {
 	Mesh mesh;
 
 	vec4 midpoint = vec4((outerRadius - innerRadius) / 2, 0, 0, 1);
@@ -96,23 +112,24 @@ Mesh GameObject::drawTorus(float innerRadius, float outerRadius, int resolution,
 			vertice = translationMatrix * vertice;
 			rotationMatrix = RotateZ(360.0f * alpha);
 			vertice = rotationMatrix * vertice;
-			mesh.localVerticePositions.push_back(vertice);
-			mesh.globalVerticePositions.push_back(Translate(position) * vertice);
-			mesh.verticeColors.push_back(color);
+
+			mesh.addVertice(vertice, color);
 		}
 	}
 
 	// generate triangle formation
+	std::vector<int> triangles;
 	for (int i = 0; i < resolution - 1; i++) {
 		for (int j = 0; j < resolution - 1; j++) {
-			mesh.triangles.push_back(i * resolution + j);
-			mesh.triangles.push_back(i * resolution + j + 1);
-			mesh.triangles.push_back((i + 1) * resolution + j);
-			mesh.triangles.push_back(i * resolution + j + 1);
-			mesh.triangles.push_back((i + 1) * resolution + j + 1);
-			mesh.triangles.push_back((i + 1) * resolution + j);
+			triangles.push_back(i * resolution + j);
+			triangles.push_back(i * resolution + j + 1);
+			triangles.push_back((i + 1) * resolution + j);
+			triangles.push_back(i * resolution + j + 1);
+			triangles.push_back((i + 1) * resolution + j + 1);
+			triangles.push_back((i + 1) * resolution + j);
 		}
 	}
+	mesh.setTriangleArray(triangles);
 
 	return mesh;
 }

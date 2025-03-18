@@ -36,7 +36,10 @@
     <ClInclude Include="planet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ring.h">
+    <ClInclude Include="spaceship.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,7 +62,10 @@
     <ClCompile Include="planet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ring.cpp">
+    <ClCompile Include="spaceship.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

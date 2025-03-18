@@ -8,16 +8,17 @@ Planet::Planet(vec3 position, float radius, vec4 color, int resolution, GLuint p
 	this->resolution = resolution;
 	this->program = program;
 
-	mesh = drawSphere(radius, resolution, color, position);
+	Mesh sphere = drawSphere(radius, resolution, color, position);
+	sphere.setPosition(this->position);
+	meshs.push_back(sphere);
 
-	Ring ring1 = Ring(position, radius + 1.0f, radius + 1.2f, vec4(0.0, 1.0, 1.0, 1.0), 40, program);
-	rings.push_back(ring1);
+	Mesh ring = drawTorus(radius + 0.1f, radius + 0.12f, resolution, vec4(1.0, 1.0, 1.0, 1.0), position);
+	ring.setPosition(this->position);
+	meshs.push_back(ring);
 
 	setupBuffers();
 }
 
 void Planet::updateExtra() {
-	for (int i = 0; i < rings.size(); i++) {
-		rings[i].updateBuffers();
-	}
+	
 }

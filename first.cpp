@@ -1,7 +1,6 @@
 #include "Angel.h"
 #include "gameobjects.h"
 #include "planet.h"
-#include "ring.h"
 
 typedef Angel::vec4  color4;
 typedef Angel::vec4  point4;
@@ -19,7 +18,7 @@ GLuint model;  // model-view matrix uniform shader variable location
 GLfloat  fovy = 120.0;  // Field-of-view in Y direction angle (in degrees)
 GLfloat  aspect;       // Viewport aspect ratio
 GLfloat  zNear = 0.1, zFar = 1000.0;
-GLuint  project; // projection matrix uniform shader variable location
+GLuint  viewProjection; // projection matrix uniform shader variable location
 GLdouble viewer[3] = { 25, 170, 15 };
 //----------------------------------------------------------------------------
 
@@ -31,8 +30,8 @@ void init()
     // Load shaders and use the resulting shader program
     GLuint program = InitShader("vshader21.glsl", "fshader21.glsl");
     glUseProgram(program);
-    model = glGetUniformLocation(program, "model_view");
-    project = glGetUniformLocation(program, "projection");
+    model = glGetUniformLocation(program, "model");
+    viewProjection = glGetUniformLocation(program, "view_projection");
 
 	// create planets
     int planetResolution = 40;
@@ -58,12 +57,10 @@ void display(void)
     point4  eye(viewer[0], viewer[1], viewer[2], 1.0);
     point4  at(30, 170, 15, 1.0);
     vec4    up(0.0, 0.0, 1.0, 0.0);
-    printv(eye);
-    mat4  mv = LookAt(eye, at, up);
-    glUniformMatrix4fv(model, 1, GL_TRUE, mv);
-
-    mat4  p = Perspective(fovy, aspect, zNear, zFar);
-    glUniformMatrix4fv(project, 1, GL_TRUE, p);
+    mat4  viewMatrix = LookAt(eye, at, up);
+    mat4  projectionMatrix = Perspective(fovy, aspect, zNear, zFar);
+	mat4 viewProjectionMatrix = projectionMatrix * viewMatrix;
+    glUniformMatrix4fv(viewProjection, 1, GL_TRUE, viewProjectionMatrix);
 
 	// update every game object's buffer
     for (int i = 0; i < gameObjects.size(); i++) {

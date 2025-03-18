@@ -24,8 +24,9 @@
     <ClInclude Include="first.h" />
     <ClInclude Include="gameobjects.h" />
     <ClInclude Include="mat.h" />
+    <ClInclude Include="mesh.h" />
     <ClInclude Include="planet.h" />
-    <ClInclude Include="ring.h" />
+    <ClInclude Include="spaceship.h" />
     <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
@@ -38,8 +39,9 @@
     <ClCompile Include="first.cpp" />
     <ClCompile Include="gameobjects.cpp" />
     <ClCompile Include="initshader.cpp" />
+    <ClCompile Include="mesh.cpp" />
     <ClCompile Include="planet.cpp" />
-    <ClCompile Include="ring.cpp" />
+    <ClCompile Include="spaceship.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
