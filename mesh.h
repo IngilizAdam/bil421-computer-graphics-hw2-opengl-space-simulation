@@ -10,9 +10,11 @@ class Mesh {
 
 	vec4 position;
 	vec4 rotation;
+	vec3 scale;
 
 	vec4 parentPosition;
 	vec4 parentRotation;
+	vec3 parentScale;
 
 	mat4 modelMatrix;
 
@@ -22,6 +24,7 @@ public:
 	Mesh() {
 		position = vec4(0.0, 0.0, 0.0, 1.0);
 		rotation = vec4(0.0, 0.0, 0.0, 0.0);
+		scale = vec3(1.0, 1.0, 1.0);
 		modelMatrix = identity();
 	}
 
@@ -31,9 +34,11 @@ public:
 	void setPosition(vec3 position);
 	void setPosition(vec4 position);
 	void setRotation(vec3 rotation);
+	void setScale(vec3 scale);
 
 	void setParentPosition(vec4 position);
 	void setParentRotation(vec4 rotation);
+	void setParentScale(vec3 scale);
 
 	mat4 getModelMatrix() { return modelMatrix; }
 	vec4* getLocalVerticePositions() { return localVerticePositions.data(); }

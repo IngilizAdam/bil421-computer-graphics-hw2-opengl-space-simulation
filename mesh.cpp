@@ -25,6 +25,12 @@ void Mesh::setRotation(vec3 rotation) {
 	recalculateModelMatrix();
 }
 
+void Mesh::setScale(vec3 scale) {
+	this->scale = scale;
+	
+	recalculateModelMatrix();
+}
+
 void Mesh::setParentPosition(vec4 position) {
 	this->parentPosition = position;
 
@@ -37,10 +43,17 @@ void Mesh::setParentRotation(vec4 rotation) {
 	recalculateModelMatrix();
 }
 
+void Mesh::setParentScale(vec3 scale) {
+	this->parentScale = scale;
+	
+	recalculateModelMatrix();
+}
+
 void Mesh::recalculateModelMatrix() {
 	vec4 globalPosition = parentPosition + position;
 	vec4 globalRotation = parentRotation + rotation;
+	vec3 globalScale = vec3(parentScale.x * scale.x, parentScale.y * scale.y, parentScale.z * scale.z);
 	globalPosition.w = 1.0;
 
-	modelMatrix = Translate(globalPosition) * RotateZ(globalRotation.z) * RotateY(globalRotation.y) * RotateX(globalRotation.x);
+	modelMatrix = Translate(globalPosition) * RotateZ(globalRotation.z) * RotateY(globalRotation.y) * RotateX(globalRotation.x) * Scale(globalScale);
 }
