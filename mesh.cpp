@@ -25,6 +25,21 @@ void Mesh::setRotation(vec3 rotation) {
 	recalculateModelMatrix();
 }
 
+void Mesh::setParentPosition(vec4 position) {
+	this->parentPosition = position;
+
+	recalculateModelMatrix();
+}
+
+void Mesh::setParentRotation(vec4 rotation) {
+	this->parentRotation = rotation;
+
+	recalculateModelMatrix();
+}
+
 void Mesh::recalculateModelMatrix() {
-	modelMatrix = Translate(position) * RotateX(rotation.x) * RotateY(rotation.y) * RotateZ(rotation.z);
+	vec4 globalPosition = parentPosition + position;
+	vec4 globalRotation = parentRotation + rotation;
+
+	modelMatrix = Translate(globalPosition) * RotateX(globalRotation.x) * RotateY(globalRotation.y) * RotateZ(globalRotation.z);
 }

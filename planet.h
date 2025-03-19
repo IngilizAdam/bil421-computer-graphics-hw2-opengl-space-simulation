@@ -13,7 +13,7 @@ protected:
 
 public:
 	// constructor
-	Planet(vec3 position, float radius, vec4 color, int resolution, GLuint program);
+	Planet(vec3 position, vec3 rotation, float radius, vec4 color, int resolution, GLuint program);
 
 	void updateExtra() override;
 

@@ -20,6 +20,8 @@ protected:
 
 public:
 	GameObject(GLuint program) {
+		this->position = vec4(0.0, 0.0, 0.0, 1.0);
+		this->rotation = vec4(0.0, 0.0, 0.0, 0.0);
 		this->program = program;
 		this->model = glGetUniformLocation(program, "model");		
 	}

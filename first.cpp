@@ -38,13 +38,13 @@ void init()
     int planetResolution = 40;
     float planetRadius = 1.0f;
     //gameObjects.push_back(new Planet(vec3(30, 170, 15), planetRadius, vec4(1.00, 0.00, 0.00, 1.0), planetResolution, program));
-    gameObjects.push_back(new Spaceship(vec3(30, 170, 15), 1.0f, 0.2f, vec4(1, 0, 0, 1), 50, program));
-    gameObjects.push_back(new Planet(vec3(80, 110, 25), planetRadius, vec4(0.00, 1.00, 0.00, 1.0), planetResolution, program));
-    gameObjects.push_back(new Planet(vec3(70, 60, 12), planetRadius, vec4(0.00, 0.00, 1.00, 1.0), planetResolution, program));
-    gameObjects.push_back(new Planet(vec3(90, 150, 13), 0.5, vec4(1.00, 1.00, 0.00, 1.0), planetResolution, program));
-    gameObjects.push_back(new Planet(vec3(120, 80, 17), 0.5, vec4(1.00, 0.00, 1.00, 1.0), planetResolution, program));
-    gameObjects.push_back(new Planet(vec3(150, 40, 15), 0.5, vec4(0.00, 1.00, 1.00, 1.0), planetResolution, program));
-    gameObjects.push_back(new Planet(vec3(160, 170, 22), 0.5, vec4(1.00, 1.00, 1.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Spaceship(vec3(30, 170, 15), vec3(0, 0, 0), 1.0f, 0.2f, vec4(1, 0, 0, 1), 50, program));
+    gameObjects.push_back(new Planet(vec3(80, 110, 25), vec3(0, 0, 0), planetRadius, vec4(0.00, 1.00, 0.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(70, 60, 12), vec3(0, 0, 0), planetRadius, vec4(0.00, 0.00, 1.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(90, 150, 13), vec3(0, 0, 0), 0.5, vec4(1.00, 1.00, 0.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(120, 80, 17), vec3(0, 0, 0), 0.5, vec4(1.00, 0.00, 1.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(150, 40, 15), vec3(0, 0, 0), 0.5, vec4(0.00, 1.00, 1.00, 1.0), planetResolution, program));
+    gameObjects.push_back(new Planet(vec3(160, 170, 22), vec3(0, 0, 0), 0.5, vec4(1.00, 1.00, 1.00, 1.0), planetResolution, program));
 
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0, 0.0, 0.0, 1.0);

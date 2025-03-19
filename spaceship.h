@@ -10,7 +10,7 @@ protected:
 	int resolution;
 	
 public:
-	Spaceship(vec3 position, float radius, float thickness, vec4 color, int resolution, GLuint program);
+	Spaceship(vec3 position, vec3 rotation, float radius, float thickness, vec4 color, int resolution, GLuint program);
 
 	void updateExtra() override;
 
