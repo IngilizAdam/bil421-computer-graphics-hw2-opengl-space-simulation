@@ -150,3 +150,37 @@ Mesh GameObject::drawTorus(float innerRadius, float outerRadius, int resolution,
 
 	return mesh;
 }
+
+Mesh GameObject::drawTetrahedron(float base, float length, vec4 color) {
+	Mesh mesh;
+
+	float mid = base / 2;
+	vec4 top = vec4(0, 0, length, 1);
+	vec4 bottom1 = vec4(-mid, -mid, 0, 1);
+	vec4 bottom2 = vec4(mid, -mid, 0, 1);
+	vec4 bottom3 = vec4(mid, mid, 0, 1);
+	vec4 bottom4 = vec4(-mid, mid, 0, 1);
+	mesh.addVertice(bottom1, color);
+	mesh.addVertice(bottom2, color);
+	mesh.addVertice(bottom3, color);
+	mesh.addVertice(bottom4, color);
+	mesh.addVertice(top, color);
+
+	// generate triangle formation
+	std::vector<int> triangles;
+	triangles.push_back(0);
+	triangles.push_back(4);
+	triangles.push_back(1);
+	triangles.push_back(1);
+	triangles.push_back(4);
+	triangles.push_back(2);
+	triangles.push_back(2);
+	triangles.push_back(4);
+	triangles.push_back(3);
+	triangles.push_back(3);
+	triangles.push_back(4);
+	triangles.push_back(0);
+	mesh.setTriangleArray(triangles);
+
+	return mesh;
+}

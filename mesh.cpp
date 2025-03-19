@@ -50,10 +50,20 @@ void Mesh::setParentScale(vec3 scale) {
 }
 
 void Mesh::recalculateModelMatrix() {
-	vec4 globalPosition = parentPosition + position;
-	vec4 globalRotation = parentRotation + rotation;
+	// calculate global scale
 	vec3 globalScale = vec3(parentScale.x * scale.x, parentScale.y * scale.y, parentScale.z * scale.z);
+
+	// apply parent's rotation to the local position
+	mat4 parentRotationMatrix = RotateZ(parentRotation.z) * RotateY(parentRotation.y) * RotateX(parentRotation.x);
+	vec4 rotatedPosition = parentRotationMatrix * position;
+
+	// calculate global position
+	vec4 globalPosition = parentPosition + rotatedPosition;
 	globalPosition.w = 1.0;
 
+	// calculate global rotation
+	vec4 globalRotation = parentRotation + rotation;
+
+	// construct the model matrix
 	modelMatrix = Translate(globalPosition) * RotateZ(globalRotation.z) * RotateY(globalRotation.y) * RotateX(globalRotation.x) * Scale(globalScale);
 }

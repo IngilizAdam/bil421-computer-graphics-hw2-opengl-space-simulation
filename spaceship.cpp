@@ -24,5 +24,14 @@ Spaceship::Spaceship(vec3 position, vec3 rotation, float radius, float thickness
 	torus2.setParentScale(vec3(GENERAL_SCALE, GENERAL_SCALE, GENERAL_SCALE));
 	meshs.push_back(torus2);
 
+	Mesh tetrahedron = drawTetrahedron(1, 2, color);
+	tetrahedron.setPosition(vec3(0, -(radius), 0));
+	tetrahedron.setRotation(vec3(90, 0, 0));
+	tetrahedron.setScale(vec3(0.7, 0.7, 2));
+	tetrahedron.setParentPosition(this->position);
+	tetrahedron.setParentRotation(this->rotation);
+	tetrahedron.setParentScale(vec3(GENERAL_SCALE, GENERAL_SCALE, GENERAL_SCALE));
+	meshs.push_back(tetrahedron);
+
 	setupBuffers();
 }

@@ -73,10 +73,6 @@ void display(void)
 	viewer[1] = position.y;
 	viewer[2] = position.z + THIRD_PERSON_LEVERAGE;
 
-	vec4 shift = normalize(cross(spaceshipVelocity, vec4(0, 0, 1, 0)));
-	viewer[0] += shift.x * 5;
-	viewer[1] += shift.y * 5;
-
     point4  eye(viewer[0], viewer[1], viewer[2], 1.0);
 	// look at the direction of spaceship
     point4 at(spaceshipPosition + leverage);

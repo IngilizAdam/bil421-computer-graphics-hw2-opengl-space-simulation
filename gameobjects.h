@@ -49,4 +49,5 @@ public:
 
 	static Mesh drawSphere(float radius, int resolution, vec4 color);
 	static Mesh drawTorus(float innerRadius, float outerRadius, int resolution, vec4 color);
+	static Mesh drawTetrahedron(float base, float length, vec4 color);
 };
