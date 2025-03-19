@@ -58,6 +58,26 @@ void GameObject::updateExtra() {
 	// for derived classes to implement
 }
 
+void GameObject::setPosition(vec4 position) {
+	this->position = position;
+	
+	for (int i = 0; i < meshs.size(); i++) {
+		meshs[i].setParentPosition(position);
+	}
+}
+
+void GameObject::setRotation(vec4 rotation) {
+	this->rotation = rotation;
+	
+	for (int i = 0; i < meshs.size(); i++) {
+		meshs[i].setParentRotation(rotation);
+	}
+}
+
+void GameObject::setVelocity(vec4 velocity) {
+	this->velocity = velocity;
+}
+
 Mesh GameObject::drawSphere(float radius, int resolution, vec4 color) {
 	Mesh mesh;
 

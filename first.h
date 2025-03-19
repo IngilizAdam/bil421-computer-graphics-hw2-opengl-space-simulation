@@ -1,1 +1,4 @@
 #pragma once
+
+#define SPACESHIP_MINIMUM_SPEED 0.1
+#define SPACESHIP_MAXIMUM_SPEED 1.0

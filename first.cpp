@@ -1,3 +1,4 @@
+#include "first.h"
 #include "Angel.h"
 #include "gameobjects.h"
 #include "planet.h"
@@ -20,10 +21,12 @@ GLfloat  fovy = 120.0;  // Field-of-view in Y direction angle (in degrees)
 GLfloat  aspect;       // Viewport aspect ratio
 GLfloat  zNear = 0.1, zFar = 1000.0;
 GLuint  viewProjection; // projection matrix uniform shader variable location
-GLdouble viewer[3] = { 25, 170, 15 };
+GLdouble viewer[3] = { 0, 0, 150 };
 //----------------------------------------------------------------------------
 
 std::vector<GameObject*> gameObjects;
+
+GameObject* spaceship;
 
 // OpenGL initialization
 void init()
@@ -34,11 +37,15 @@ void init()
     model = glGetUniformLocation(program, "model");
     viewProjection = glGetUniformLocation(program, "view_projection");
 
+	// create spaceship
+	spaceship = new Spaceship(vec3(105, 0, 15), vec3(0, 0, 0), 1.0f, 0.2f, vec4(1, 0, 0, 1), 50, program);
+	spaceship->setVelocity(vec4(0.0, -2.0, 0.0, 0.0));
+	gameObjects.push_back(spaceship);
+
 	// create planets
     int planetResolution = 40;
     float planetRadius = 1.0f;
-    //gameObjects.push_back(new Planet(vec3(30, 170, 15), planetRadius, vec4(1.00, 0.00, 0.00, 1.0), planetResolution, program));
-    gameObjects.push_back(new Spaceship(vec3(30, 170, 15), vec3(0, 0, 0), 1.0f, 0.2f, vec4(1, 0, 0, 1), 50, program));
+    gameObjects.push_back(new Planet(vec3(30, 170, 15), vec3(0, 0, 0), planetRadius, vec4(1.00, 0.00, 0.00, 1.0), planetResolution, program));
     gameObjects.push_back(new Planet(vec3(80, 110, 25), vec3(0, 0, 0), planetRadius, vec4(0.00, 1.00, 0.00, 1.0), planetResolution, program));
     gameObjects.push_back(new Planet(vec3(70, 60, 12), vec3(0, 0, 0), planetRadius, vec4(0.00, 0.00, 1.00, 1.0), planetResolution, program));
     gameObjects.push_back(new Planet(vec3(90, 150, 13), vec3(0, 0, 0), 0.5, vec4(1.00, 1.00, 0.00, 1.0), planetResolution, program));
@@ -57,8 +64,8 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     point4  eye(viewer[0], viewer[1], viewer[2], 1.0);
-    point4  at(30, 170, 15, 1.0);
-    vec4    up(0.0, 0.0, 1.0, 0.0);
+    point4  at(0, 0, 0, 1.0);
+    vec4    up(0.0, 1.0, 0.0, 0.0);
     mat4  viewMatrix = LookAt(eye, at, up);
     mat4  projectionMatrix = Perspective(fovy, aspect, zNear, zFar);
 	mat4 viewProjectionMatrix = projectionMatrix * viewMatrix;
@@ -81,7 +88,62 @@ void keyboard(unsigned char key, int x, int y) {
     if (key == 'Y') viewer[1] += 1.0;
     if (key == 'z') viewer[2] -= 1.0;
     if (key == 'Z') viewer[2] += 1.0;
+    
+    if (key == 'a' || key == 'A') {
+		// slow down spaceship
+		vec4 velocity = spaceship->getVelocity();
+
+		mat4 scaleMatrix = Scale(0.9, 0.9, 0.9);
+		velocity = scaleMatrix * velocity;
+        if (length(velocity) < SPACESHIP_MINIMUM_SPEED) {
+			velocity = normalize(velocity) * SPACESHIP_MINIMUM_SPEED;
+        }
+
+		spaceship->setVelocity(velocity);
+    }
+	if (key == 'd' || key == 'D') {
+		// speed up spaceship
+		vec4 velocity = spaceship->getVelocity();
+
+		mat4 scaleMatrix = Scale(1.1, 1.1, 1.1);
+		velocity = scaleMatrix * velocity;
+		if (length(velocity) > SPACESHIP_MAXIMUM_SPEED) {
+			velocity = normalize(velocity) * SPACESHIP_MAXIMUM_SPEED;
+		}
+
+		spaceship->setVelocity(velocity);
+	}
+    
     glutPostRedisplay();
+}
+
+void specialKeyboard(int key, int x, int y) {
+    if (key == GLUT_KEY_LEFT) {
+        // rotate spaceship left
+        vec4 rotation = spaceship->getRotation();
+        mat4 rotationMatrix = RotateZ(5.0);
+        rotation = rotationMatrix * rotation;
+        spaceship->setRotation(rotation);
+
+		// also rotate velocity
+		vec4 velocity = spaceship->getVelocity();
+		velocity = rotationMatrix * velocity;
+		spaceship->setVelocity(velocity);
+    }
+	if (key == GLUT_KEY_RIGHT) {
+		// rotate spaceship right
+		vec4 rotation = spaceship->getRotation();
+		mat4 rotationMatrix = RotateZ(-5.0);
+		rotation = rotationMatrix * rotation;
+		spaceship->setRotation(rotation);
+
+		// also rotate velocity
+		vec4 velocity = spaceship->getVelocity();
+		velocity = rotationMatrix * velocity;
+		spaceship->setVelocity(velocity);
+	}
+
+	glutPostRedisplay();
 }
 
 //----------------------------------------------------------------------------
@@ -90,6 +152,17 @@ void reshape(int width, int height) {
     glViewport(0, 0, width, height);
 
     aspect = GLfloat(width) / height;
+}
+
+//----------------------------------------------------------------------------
+
+void update(int value) {
+	for (int i = 0; i < gameObjects.size(); i++) {
+		gameObjects[i]->updateExtra();
+	}
+
+	glutPostRedisplay();
+	glutTimerFunc(100, update, 0);
 }
 
 //----------------------------------------------------------------------------
@@ -114,7 +187,10 @@ int main(int argc, char** argv) {
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKeyboard);
     glutReshapeFunc(reshape);
+
+	glutTimerFunc(100, update, 0);
 
     glutMainLoop();
     return 0;

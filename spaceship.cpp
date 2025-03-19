@@ -23,5 +23,6 @@ Spaceship::Spaceship(vec3 position, vec3 rotation, float radius, float thickness
 }
 
 void Spaceship::updateExtra() {
-	
+	// move spaceship according to velocity
+	setPosition(position + velocity);
 }
