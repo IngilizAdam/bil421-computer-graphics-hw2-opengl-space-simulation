@@ -13,6 +13,8 @@ class Mesh {
 
 	mat4 modelMatrix;
 
+	void recalculateModelMatrix();
+
 public:
 	Mesh() {
 		position = vec4(0.0, 0.0, 0.0, 1.0);
@@ -23,8 +25,9 @@ public:
 	void addVertice(vec4 vertice, vec4 color);
 	void setTriangleArray(std::vector<int> triangles);
 
+	void setPosition(vec3 position);
 	void setPosition(vec4 position);
-	void setRotation(vec4 rotation);
+	void setRotation(vec3 rotation);
 
 	mat4 getModelMatrix() { return modelMatrix; }
 	vec4* getLocalVerticePositions() { return localVerticePositions.data(); }

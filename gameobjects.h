@@ -16,13 +16,12 @@ protected:
 	std::vector<GLuint> vao;
 	std::vector<GLuint> buffer;
 	GLuint program;
+	GLuint model;
 
 public:
-	GameObject() {}
-
 	GameObject(GLuint program) {
 		this->program = program;
-		setupBuffers();
+		this->model = glGetUniformLocation(program, "model");		
 	}
 
 	void setupBuffers();

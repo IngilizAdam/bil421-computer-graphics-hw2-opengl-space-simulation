@@ -9,15 +9,22 @@ void Mesh::setTriangleArray(std::vector<int> triangles) {
 	this->triangles = triangles;
 }
 
-void Mesh::setPosition(vec4 position) {
-	this->position = position;
+void Mesh::setPosition(vec3 position) {
+	this->position = vec4(position.x, position.y, position.z, 1.0);
 
-	modelMatrix = Translate(position);
+	recalculateModelMatrix();
 }
 
-void Mesh::setRotation(vec4 rotation) {
-	this->rotation = rotation;
+void Mesh::setPosition(vec4 position) {
+	setPosition(vec3(position.x, position.y, position.z));
+}
 
-	mat4 rotationMatrix = RotateX(rotation.x) * RotateY(rotation.y) * RotateZ(rotation.z);
-	modelMatrix = rotationMatrix * modelMatrix;
+void Mesh::setRotation(vec3 rotation) {
+	this->rotation = vec4(rotation.x, rotation.y, rotation.z, 0.0);
+
+	recalculateModelMatrix();
+}
+
+void Mesh::recalculateModelMatrix() {
+	modelMatrix = Translate(position) * RotateX(rotation.x) * RotateY(rotation.y) * RotateZ(rotation.z);
 }

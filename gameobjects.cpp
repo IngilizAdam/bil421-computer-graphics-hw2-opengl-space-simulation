@@ -48,7 +48,6 @@ void GameObject::updateBuffers() {
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
 		// send model matrix to shader
-		GLuint model = glGetUniformLocation(program, "model");
 		glUniformMatrix4fv(model, 1, GL_TRUE, mesh.getModelMatrix());
 
 		glDrawElements(GL_TRIANGLES, mesh.getTrianglesCount(), GL_UNSIGNED_INT, mesh.getTriangles());
