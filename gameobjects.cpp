@@ -37,8 +37,6 @@ void GameObject::setupBuffers() {
 }
 
 void GameObject::updateBuffers() {
-	updateExtra();
-
 	for (int i = 0; i < meshs.size(); i++) {
 		Mesh mesh = meshs[i];
 		GLuint vao = this->vao[i];
@@ -54,8 +52,8 @@ void GameObject::updateBuffers() {
 	}
 }
 
-void GameObject::updateExtra() {
-	// for derived classes to implement
+void GameObject::updatePhysics() {
+	setPosition(position + velocity);
 }
 
 void GameObject::setPosition(vec4 position) {

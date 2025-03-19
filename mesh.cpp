@@ -40,6 +40,7 @@ void Mesh::setParentRotation(vec4 rotation) {
 void Mesh::recalculateModelMatrix() {
 	vec4 globalPosition = parentPosition + position;
 	vec4 globalRotation = parentRotation + rotation;
+	globalPosition.w = 1.0;
 
-	modelMatrix = Translate(globalPosition) * RotateX(globalRotation.x) * RotateY(globalRotation.y) * RotateZ(globalRotation.z);
+	modelMatrix = Translate(globalPosition) * RotateZ(globalRotation.z) * RotateY(globalRotation.y) * RotateX(globalRotation.x);
 }

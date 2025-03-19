@@ -35,7 +35,7 @@ public:
 
 	void setupBuffers();
 	void updateBuffers();
-	virtual void updateExtra();
+	void updatePhysics();
 
 	void setPosition(vec4 position);
 	void setRotation(vec4 rotation);

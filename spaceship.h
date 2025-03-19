@@ -12,8 +12,6 @@ protected:
 public:
 	Spaceship(vec3 position, vec3 rotation, float radius, float thickness, vec4 color, int resolution, GLuint program);
 
-	void updateExtra() override;
-
 	float getRadius() { return radius; }
 	int getResolution() { return resolution; }
 };

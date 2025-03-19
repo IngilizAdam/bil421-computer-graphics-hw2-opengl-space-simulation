@@ -19,7 +19,7 @@ GLuint model;  // model-view matrix uniform shader variable location
 // Projection transformation parameters
 GLfloat  fovy = 120.0;  // Field-of-view in Y direction angle (in degrees)
 GLfloat  aspect;       // Viewport aspect ratio
-GLfloat  zNear = 0.1, zFar = 1000.0;
+GLfloat  zNear = 0.1, zFar = 10000.0;
 GLuint  viewProjection; // projection matrix uniform shader variable location
 GLdouble viewer[3] = { 0, 0, 150 };
 //----------------------------------------------------------------------------
@@ -39,7 +39,7 @@ void init()
 
 	// create spaceship
 	spaceship = new Spaceship(vec3(105, 0, 15), vec3(0, 0, 0), 1.0f, 0.2f, vec4(1, 0, 0, 1), 50, program);
-	spaceship->setVelocity(vec4(0.0, -2.0, 0.0, 0.0));
+	spaceship->setVelocity(vec4(0.0, -1.0, 0.0, 0.0));
 	gameObjects.push_back(spaceship);
 
 	// create planets
@@ -63,9 +63,20 @@ void display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// get spaceship position and set camera over it
+	vec4 spaceshipPosition = spaceship->getPosition();
+	vec4 spaceshipVelocity = spaceship->getVelocity();
+	vec4 offset = normalize(spaceshipVelocity) * THIRD_PERSON_BACK;
+	vec4 position = spaceshipPosition - offset;
+    vec4 leverage = vec4(0, 0, THIRD_PERSON_LEVERAGE, 0);
+	viewer[0] = position.x;
+	viewer[1] = position.y;
+	viewer[2] = position.z + THIRD_PERSON_LEVERAGE;
+
     point4  eye(viewer[0], viewer[1], viewer[2], 1.0);
-    point4  at(0, 0, 0, 1.0);
-    vec4    up(0.0, 1.0, 0.0, 0.0);
+	// look at the direction of spaceship
+    point4 at(spaceshipPosition + leverage);
+    vec4    up(0.0, 0.0, 1.0, 0.0);
     mat4  viewMatrix = LookAt(eye, at, up);
     mat4  projectionMatrix = Perspective(fovy, aspect, zNear, zFar);
 	mat4 viewProjectionMatrix = projectionMatrix * viewMatrix;
@@ -122,7 +133,8 @@ void specialKeyboard(int key, int x, int y) {
         // rotate spaceship left
         vec4 rotation = spaceship->getRotation();
         mat4 rotationMatrix = RotateZ(5.0);
-        rotation = rotationMatrix * rotation;
+        //rotation = rotationMatrix * rotation;
+        rotation += vec4(0, 0, 5, 0);
         spaceship->setRotation(rotation);
 
 		// also rotate velocity
@@ -134,7 +146,8 @@ void specialKeyboard(int key, int x, int y) {
 		// rotate spaceship right
 		vec4 rotation = spaceship->getRotation();
 		mat4 rotationMatrix = RotateZ(-5.0);
-		rotation = rotationMatrix * rotation;
+		//rotation = rotationMatrix * rotation;
+        rotation += vec4(0, 0, -5, 0);
 		spaceship->setRotation(rotation);
 
 		// also rotate velocity
@@ -158,11 +171,11 @@ void reshape(int width, int height) {
 
 void update(int value) {
 	for (int i = 0; i < gameObjects.size(); i++) {
-		gameObjects[i]->updateExtra();
+		gameObjects[i]->updatePhysics();
 	}
 
 	glutPostRedisplay();
-	glutTimerFunc(100, update, 0);
+	glutTimerFunc(FRAME_TIME, update, 0);
 }
 
 //----------------------------------------------------------------------------
@@ -190,7 +203,7 @@ int main(int argc, char** argv) {
     glutSpecialFunc(specialKeyboard);
     glutReshapeFunc(reshape);
 
-	glutTimerFunc(100, update, 0);
+	glutTimerFunc(FRAME_TIME, update, 0);
 
     glutMainLoop();
     return 0;

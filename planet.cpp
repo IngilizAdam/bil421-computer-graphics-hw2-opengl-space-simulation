@@ -21,7 +21,3 @@ Planet::Planet(vec3 position, vec3 rotation, float radius, vec4 color, int resol
 
 	setupBuffers();
 }
-
-void Planet::updateExtra() {
-	
-}
