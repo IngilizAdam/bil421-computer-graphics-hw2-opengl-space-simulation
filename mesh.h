@@ -48,4 +48,9 @@ public:
 	unsigned int getTrianglesCount() { return triangles.size(); }
 	unsigned int getVerticePositionsSize() { return sizeof(vec4) * localVerticePositions.size(); }
 	unsigned int getVerticeColorsSize() { return sizeof(vec4) * verticeColors.size(); }
+
+	// static functions
+	static Mesh* drawSphere(float radius, int resolution, vec4 color);
+	static Mesh* drawTorus(float innerRadius, float outerRadius, int resolution, vec4 color);
+	static Mesh* drawTetrahedron(float base, float length, vec4 color);
 };

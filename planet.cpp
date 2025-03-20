@@ -10,16 +10,16 @@ Planet::Planet(vec3 position, vec3 rotation, float radius, vec4 color, int resol
 	this->resolution = resolution;
 	this->program = program;
 
-	Mesh sphere = drawSphere(radius, resolution, color);
-	sphere.setParentPosition(this->position);
-	sphere.setParentRotation(this->rotation);
-	sphere.setParentScale(vec3(GENERAL_SCALE, GENERAL_SCALE, GENERAL_SCALE));
+	Mesh* sphere = Mesh::drawSphere(radius, resolution, color);
+	sphere->setParentPosition(this->position);
+	sphere->setParentRotation(this->rotation);
+	sphere->setParentScale(vec3(GENERAL_SCALE, GENERAL_SCALE, GENERAL_SCALE));
 	meshs.push_back(sphere);
 
-	Mesh ring = drawTorus(radius + 0.1f, radius + 0.12f, resolution, vec4(1.0, 1.0, 1.0, 1.0));
-	ring.setParentPosition(this->position);
-	ring.setParentRotation(this->rotation);
-	ring.setParentScale(vec3(GENERAL_SCALE, GENERAL_SCALE, GENERAL_SCALE));
+	Mesh* ring = Mesh::drawTorus(radius + 0.1f, radius + 0.12f, resolution, vec4(1.0, 1.0, 1.0, 1.0));
+	ring->setParentPosition(this->position);
+	ring->setParentRotation(this->rotation);
+	ring->setParentScale(vec3(GENERAL_SCALE, GENERAL_SCALE, GENERAL_SCALE));
 	meshs.push_back(ring);
 
 	setupBuffers();

@@ -17,7 +17,7 @@ protected:
 	vec4 velocity;
 
 	// drawables
-	std::vector<Mesh> meshs;
+	std::vector<Mesh*> meshs;
 
 	// opengl stuff
 	std::vector<GLuint> vao;
@@ -46,8 +46,4 @@ public:
 	vec4 getPosition() { return position; }
 	vec4 getRotation() { return rotation; }
 	vec4 getVelocity() { return velocity; }
-
-	static Mesh drawSphere(float radius, int resolution, vec4 color);
-	static Mesh drawTorus(float innerRadius, float outerRadius, int resolution, vec4 color);
-	static Mesh drawTetrahedron(float base, float length, vec4 color);
 };
