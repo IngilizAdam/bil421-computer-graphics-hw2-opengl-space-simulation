@@ -7,6 +7,7 @@ class Mesh {
 	std::vector<vec4> localVerticePositions;
 	std::vector<vec4> verticeColors;
 	std::vector<int> triangles;
+	std::vector<vec3> verticeNormals;
 
 	vec4 position;
 	vec4 rotation;
@@ -19,6 +20,7 @@ class Mesh {
 	mat4 modelMatrix;
 
 	void recalculateModelMatrix();
+	void recalculateNormals();
 
 public:
 	Mesh() {
@@ -43,11 +45,13 @@ public:
 	mat4 getModelMatrix() { return modelMatrix; }
 	vec4* getLocalVerticePositions() { return localVerticePositions.data(); }
 	vec4* getVerticeColors() { return verticeColors.data(); }
+	vec3* getVerticeNormals() { return verticeNormals.data(); }
 	int* getTriangles() { return triangles.data(); }
 	unsigned int getVerticeCount() { return localVerticePositions.size(); }
 	unsigned int getTrianglesCount() { return triangles.size(); }
 	unsigned int getVerticePositionsSize() { return sizeof(vec4) * localVerticePositions.size(); }
 	unsigned int getVerticeColorsSize() { return sizeof(vec4) * verticeColors.size(); }
+	unsigned int getVerticeNormalsSize() { return sizeof(vec3) * verticeNormals.size(); }
 
 	// static functions
 	static Mesh* drawSphere(float radius, int resolution, vec4 color);

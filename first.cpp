@@ -54,6 +54,7 @@ void init()
     gameObjects.push_back(new Planet(vec3(160, 170, 22), vec3(0, 0, 0), 0.5, vec4(1.00, 1.00, 1.00, 1.0), planetResolution, program));
 
     glEnable(GL_DEPTH_TEST);
+    glShadeModel(GL_SMOOTH);
     glClearColor(0.0, 0.0, 0.0, 1.0);
 }
 

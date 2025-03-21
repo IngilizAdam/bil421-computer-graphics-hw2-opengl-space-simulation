@@ -68,6 +68,31 @@ void Mesh::recalculateModelMatrix() {
 	modelMatrix = Translate(globalPosition) * RotateZ(globalRotation.z) * RotateY(globalRotation.y) * RotateX(globalRotation.x) * Scale(globalScale);
 }
 
+void Mesh::recalculateNormals() {
+	// create normals vector with the same size as the vertices and initialize it with zeros
+	verticeNormals = std::vector<vec3>(localVerticePositions.size(), vec3(0.0, 0.0, 0.0));
+
+	// calculate normals for each triangle
+	for (int i = 0; i < triangles.size(); i += 3) {
+		vec4 vertice0 = localVerticePositions[triangles[i]];
+		vec4 vertice1 = localVerticePositions[triangles[i + 1]];
+		vec4 vertice2 = localVerticePositions[triangles[i + 2]];
+
+		vec3 vector1 = vec3(vertice1.x - vertice0.x, vertice1.y - vertice0.y, vertice1.z - vertice0.z);
+		vec3 vector2 = vec3(vertice2.x - vertice0.x, vertice2.y - vertice0.y, vertice2.z - vertice0.z);
+		vec3 faceNormal = normalize(cross(vector1, vector2));
+
+		verticeNormals[triangles[i]] += faceNormal;
+		verticeNormals[triangles[i + 1]] += faceNormal;
+		verticeNormals[triangles[i + 2]] += faceNormal;
+	}
+
+	// normalize the normals
+	for (int i = 0; i < verticeNormals.size(); i++) {
+		verticeNormals[i] = normalize(verticeNormals[i]);
+	}
+}
+
 // static functions
 Mesh* Mesh::drawSphere(float radius, int resolution, vec4 color) {
 	Mesh* mesh = new Mesh();
@@ -105,6 +130,8 @@ Mesh* Mesh::drawSphere(float radius, int resolution, vec4 color) {
 	}
 	mesh->setTriangleArray(triangles);
 
+	mesh->recalculateNormals();
+
 	return mesh;
 }
 
@@ -141,6 +168,8 @@ Mesh* Mesh::drawTorus(float innerRadius, float outerRadius, int resolution, vec4
 	}
 	mesh->setTriangleArray(triangles);
 
+	mesh->recalculateNormals();
+
 	return mesh;
 }
 
@@ -174,6 +203,8 @@ Mesh* Mesh::drawTetrahedron(float base, float length, vec4 color) {
 	triangles.push_back(4);
 	triangles.push_back(0);
 	mesh->setTriangleArray(triangles);
+
+	mesh->recalculateNormals();
 
 	return mesh;
 }

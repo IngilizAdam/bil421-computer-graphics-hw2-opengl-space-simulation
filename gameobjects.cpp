@@ -15,10 +15,11 @@ void GameObject::setupBuffers() {
 
 		// Create and initialize a buffer object
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-		glBufferData(GL_ARRAY_BUFFER, mesh->getVerticePositionsSize() + mesh->getVerticeColorsSize(),
+		glBufferData(GL_ARRAY_BUFFER, mesh->getVerticePositionsSize() + mesh->getVerticeColorsSize() + mesh->getVerticeNormalsSize(),
 			NULL, GL_STATIC_DRAW);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, mesh->getVerticePositionsSize(), mesh->getLocalVerticePositions());
 		glBufferSubData(GL_ARRAY_BUFFER, mesh->getVerticePositionsSize(), mesh->getVerticeColorsSize(), mesh->getVerticeColors());
+		glBufferSubData(GL_ARRAY_BUFFER, mesh->getVerticePositionsSize() + mesh->getVerticeColorsSize(), mesh->getVerticeNormalsSize(), mesh->getVerticeNormals());
 
 		// set up vertex arrays
 		GLuint vPosition = glGetAttribLocation(program, "vPosition");
@@ -30,6 +31,11 @@ void GameObject::setupBuffers() {
 		glEnableVertexAttribArray(vColor);
 		glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, 0,
 			BUFFER_OFFSET(mesh->getVerticePositionsSize()));
+
+		GLuint vNormal = glGetAttribLocation(program, "vNormal");
+		glEnableVertexAttribArray(vNormal);
+		glVertexAttribPointer(vNormal, 3, GL_FLOAT, GL_FALSE, 0,
+			BUFFER_OFFSET(mesh->getVerticePositionsSize() + mesh->getVerticeColorsSize()));
 
 		this->vao.push_back(vao);
 		this->buffer.push_back(buffer);
