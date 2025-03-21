@@ -107,7 +107,7 @@ Mesh* Mesh::drawSphere(float radius, int resolution, vec4 color) {
 		mat4 rotationMatrix = RotateX(180.0f * alpha);
 		vertice = rotationMatrix * vertice;
 		for (int j = 0; j < resolution; j++) {
-			float beta = (1.0f * j / resolution);
+			float beta = (1.0f * j / (resolution - 1));
 			vec4 localVertice = vertice;
 			rotationMatrix = RotateZ(360.0f * beta);
 			localVertice = rotationMatrix * localVertice;
