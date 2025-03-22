@@ -15,6 +15,7 @@ protected:
 
 	// physics
 	vec4 velocity;
+	vec4 rotationalVelocity;
 
 	// drawables
 	std::vector<Mesh*> meshs;
@@ -31,8 +32,9 @@ public:
 		this->rotation = vec4(0.0, 0.0, 0.0, 0.0);
 		this->scale = vec3(1.0, 1.0, 1.0);
 		this->velocity = vec4(0.0, 0.0, 0.0, 0.0);
+		this->rotationalVelocity = vec4(0.0, 0.0, 0.0, 0.0);
 		this->program = program;
-		this->model = glGetUniformLocation(program, "model");		
+		this->model = glGetUniformLocation(program, "Model");
 	}
 
 	void setupBuffers();
@@ -42,8 +44,12 @@ public:
 	void setPosition(vec4 position);
 	void setRotation(vec4 rotation);
 	void setVelocity(vec4 velocity);
+	void setRotationalVelocity(vec4 rotationalVelocity);
+
+	vec4 getDirection();
 
 	vec4 getPosition() { return position; }
 	vec4 getRotation() { return rotation; }
 	vec4 getVelocity() { return velocity; }
+	vec4 getRotationalVelocity() { return rotationalVelocity; }
 };

@@ -94,6 +94,35 @@ void Mesh::recalculateNormals() {
 }
 
 // static functions
+Mesh* Mesh::drawPlane(float width, float height, vec4 color) {
+	Mesh* mesh = new Mesh();
+
+	// for a plane, we need 4 vertices
+	vec4 bottomLeft = vec4(-width / 2, -height / 2, 0, 1);
+	vec4 bottomRight = vec4(width / 2, -height / 2, 0, 1);
+	vec4 topLeft = vec4(-width / 2, height / 2, 0, 1);
+	vec4 topRight = vec4(width / 2, height / 2, 0, 1);
+
+	mesh->addVertice(bottomLeft, color);
+	mesh->addVertice(bottomRight, color);
+	mesh->addVertice(topLeft, color);
+	mesh->addVertice(topRight, color);
+
+	// generate triangle formation
+	std::vector<int> triangles;
+	triangles.push_back(0);
+	triangles.push_back(1);
+	triangles.push_back(2);
+	triangles.push_back(1);
+	triangles.push_back(3);
+	triangles.push_back(2);
+	mesh->setTriangleArray(triangles);
+
+	mesh->recalculateNormals();
+
+	return mesh;
+}
+
 Mesh* Mesh::drawSphere(float radius, int resolution, vec4 color) {
 	Mesh* mesh = new Mesh();
 
@@ -142,7 +171,7 @@ Mesh* Mesh::drawTorus(float innerRadius, float outerRadius, int resolution, vec4
 	for (int i = 0; i < resolution; i++) {
 		float alpha = (1.0f * i / (resolution - 1));
 		for (int j = 0; j < resolution; j++) {
-			float beta = (1.0f * j / resolution);
+			float beta = (1.0f * j / (resolution - 1));
 			mat4 rotationMatrix = RotateY(360.0f * beta);
 			vec4 vertice = rotationMatrix * midpoint;
 			mat4 translationMatrix = Translate(innerRadius, 0, 0);

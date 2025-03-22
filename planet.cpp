@@ -16,7 +16,7 @@ Planet::Planet(vec3 position, vec3 rotation, float radius, vec4 color, int resol
 	sphere->setParentScale(vec3(GENERAL_SCALE, GENERAL_SCALE, GENERAL_SCALE));
 	meshs.push_back(sphere);
 
-	Mesh* ring = Mesh::drawTorus(radius + 0.1f, radius + 0.2f, resolution, vec4(1.0, 1.0, 1.0, 1.0));
+	Mesh* ring = Mesh::drawTorus(radius + 1.0f, radius + 3.0f, resolution, vec4(0.6, 0.6, 0.6, 1.0));
 	ring->setParentPosition(this->position);
 	ring->setParentRotation(this->rotation);
 	ring->setParentScale(vec3(GENERAL_SCALE, GENERAL_SCALE, GENERAL_SCALE));

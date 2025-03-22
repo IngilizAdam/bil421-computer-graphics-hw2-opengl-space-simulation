@@ -23,10 +23,12 @@
     <ClInclude Include="CheckError.h" />
     <ClInclude Include="first.h" />
     <ClInclude Include="gameobjects.h" />
+    <ClInclude Include="ground.h" />
     <ClInclude Include="mat.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="planet.h" />
     <ClInclude Include="spaceship.h" />
+    <ClInclude Include="spacestation.h" />
     <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
@@ -38,10 +40,12 @@
   <ItemGroup>
     <ClCompile Include="first.cpp" />
     <ClCompile Include="gameobjects.cpp" />
+    <ClCompile Include="ground.cpp" />
     <ClCompile Include="initshader.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="planet.cpp" />
     <ClCompile Include="spaceship.cpp" />
+    <ClCompile Include="spacestation.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

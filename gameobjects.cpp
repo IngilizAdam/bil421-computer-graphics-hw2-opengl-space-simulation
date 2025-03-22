@@ -60,6 +60,7 @@ void GameObject::updateBuffers() {
 
 void GameObject::updatePhysics() {
 	setPosition(position + velocity);
+	setRotation(rotation + rotationalVelocity);
 }
 
 void GameObject::setPosition(vec4 position) {
@@ -80,4 +81,15 @@ void GameObject::setRotation(vec4 rotation) {
 
 void GameObject::setVelocity(vec4 velocity) {
 	this->velocity = velocity;
+}
+
+void GameObject::setRotationalVelocity(vec4 rotationalVelocity) {
+	this->rotationalVelocity = rotationalVelocity;
+}
+
+vec4 GameObject::getDirection() {
+	mat4 rotationMatrix = RotateZ(rotation.z) * RotateY(rotation.y) * RotateX(rotation.x);
+	vec4 direction = rotationMatrix * vec4(0, 1, 0, 0);
+
+	return direction;
 }

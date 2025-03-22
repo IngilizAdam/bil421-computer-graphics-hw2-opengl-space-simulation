@@ -2,7 +2,7 @@
 #include "first.h"
 
 // implement constructor of Spaceship class
-Spaceship::Spaceship(vec3 position, vec3 rotation, float radius, float thickness, vec4 color, int resolution, GLuint program) : GameObject(program) {
+SpaceShip::SpaceShip(vec3 position, vec3 rotation, float radius, float thickness, vec4 color, int resolution, GLuint program) : GameObject(program) {
 	this->position = vec4(position.x, position.y, position.z, 1.0f);
 	this->rotation = vec4(rotation.x, rotation.y, rotation.z, 0.0f);
 	this->radius = radius;
